@@ -1,18 +1,29 @@
 # NotesApp
-Simple, just for learning purposes.
 
-Notes are global (visible to everyone)
+A lightweight note-taking application built for learning purposes.
 
-Notes are displayed to the left just by title.
+## Overview
 
-In the middle and right is space for viewing notes content and editing it.
+Notes are globally visible to all users. The interface is divided into two main areas:
 
-There is a "Create New Note" button
+- **Note list** — displayed on the left side, showing note titles
+- **Note viewer / editor** — occupying the center and right, used for reading and editing note content
 
-Opened note can be edited and has buttons: "Save", "Cancel", "Delete"
+## Features
 
-Opening a note makes a smooth transition and displays it on the center and right, with other notes being pushed to the left.
+- View all notes in a sidebar list
+- Click a note to read its full content
+- Create new notes with the **Create New Note** button
+- Edit an open note with **Save**, **Cancel**, and **Delete** actions
 
-Notes
-    Title
-    Content
+## Getting Started
+
+### Backend
+```bash
+npx ts-node src/server.ts
+```
+
+### Frontend
+```bash
+npm run dev
+```
