@@ -30,4 +30,15 @@ router.delete("/notes/:id", async (req, res) => {
   res.json({ message: "deleted" })
 })
 
+// EDIT note
+router.put("/notes/:id", async (req, res) => {
+  const { id } = req.params
+  const { title, content } = req.body
+  const result = await pool.query(
+    "UPDATE notes SET title=$1, content=$2 WHERE id=$3 RETURNING *",
+    [title, content, id]
+  )
+  res.json(result.rows[0])
+})
+
 export default router
