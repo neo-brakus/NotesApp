@@ -20,10 +20,14 @@ Notes are globally visible to all users. The interface is divided into two main 
 
 ### Backend
 ```bash
+cd backend
+npm install
 npx ts-node src/server.ts
 ```
 
 ### Frontend
 ```bash
+cd ../frontend
+npm install
 npm run dev
 ```
