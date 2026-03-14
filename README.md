@@ -1,24 +1,54 @@
 # NotesApp
 
-A lightweight note-taking application built for learning purposes.
+A lightweight full-stack note-taking application built for learning purposes.
 
 ## Overview
 
-Notes are globally visible to all users. The interface is divided into two main areas:
-
-- **Note list** — displayed on the left side, showing note titles
-- **Note viewer / editor** — occupying the center and right, used for reading and editing note content
+NotesApp is a simple CRUD application that allows users to create, read, update, and delete notes. All notes are global and visible to every user. The interface consists of a sidebar listing all existing notes and a main panel for viewing and editing note content.
 
 ## Features
 
-- View all notes in a sidebar list
-- Click a note to read its full content
-- Create new notes with the **Create New Note** button
-- Edit an open note with **Save**, **Cancel**, and **Delete** actions
+- View all notes in a collapsible sidebar
+- Select a note to read its full content
+- Create new notes
+- Edit and save existing notes
+- Delete notes with a confirmation step
+- Responsive layout with mobile support
+
+## Tech Stack
+
+**Frontend:** React, Tailwind CSS
+
+**Backend:** Node.js, Express, CORS, dotenv, pg (PostgreSQL)
+
+## Project Structure
+
+```
+backend/
+  src/
+    routes/
+      notes.ts       # CRUD router for notes
+    db.ts            # PostgreSQL connection
+    server.ts        # Express server entry point
+
+frontend/
+  src/
+    App.tsx          # All app logic and UI
+    index.css
+    main.tsx
+    theme.ts
+```
 
 ## Getting Started
 
+### Prerequisites
+
+- Node.js
+- A running PostgreSQL instance
+- A `.env` file in `backend/` with your database connection details
+
 ### Backend
+
 ```bash
 cd backend
 npm install
@@ -26,8 +56,11 @@ npx ts-node src/server.ts
 ```
 
 ### Frontend
+
 ```bash
-cd ../frontend
+cd frontend
 npm install
 npm run dev
 ```
+
+The frontend runs on `http://localhost:5173` by default. The backend API is expected at `http://localhost:3000`.
