@@ -16,9 +16,11 @@ export default function App() {
   const [editTitle, setEditTitle] = useState("")
   const [editContent, setEditContent] = useState("")
   const [saving, setSaving] = useState(false)
+  // Controls the two-step delete confirmation flow
   const [deleteConfirm, setDeleteConfirm] = useState(false)
   const [sidebarOpen, setSidebarOpen] = useState(true)
   const [isMobile, setIsMobile] = useState(false)
+  // Ref for the backdrop overlay — used for click-outside-to-close on mobile
   const overlayRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -70,6 +72,7 @@ export default function App() {
     setSaving(true)
     try {
       if (mode === "new") {
+        // POST a new note and add it to local state
         const res = await fetch("http://localhost:3000/api/notes", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -78,8 +81,11 @@ export default function App() {
         const newNote = await res.json()
         setNotes([...notes, newNote])
         setSelected(newNote)
+        // Switch to edit mode so subsequent saves use PUT
         setMode("edit")
       } else if (mode === "edit" && selected) {
+        // PUT the updated note; errors are silently swallowed so local state
+        // still reflects the edit even if the server request fails
         await fetch(`http://localhost:3000/api/notes/${selected.id}`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
@@ -98,13 +104,16 @@ export default function App() {
   async function deleteNote() {
     if (!selected) return
     await fetch(`http://localhost:3000/api/notes/${selected.id}`, { method: "DELETE" })
+    // Remove the note from local state and reset the editor
     setNotes(notes.filter((n) => n.id !== selected.id))
     setSelected(null)
     setMode(null)
     setDeleteConfirm(false)
+    // On mobile, reopen the sidebar so the user can pick another note
     if (isMobile) setSidebarOpen(true)
   }
 
+  // True whenever the main panel should show the editor (both edit and new modes)
   const isEditing = mode === "edit" || mode === "new"
 
   return (
@@ -117,6 +126,7 @@ export default function App() {
       className="flex h-screen overflow-hidden relative"
     >
       {/* ── Mobile overlay backdrop ── */}
+      {/* Shown when the sidebar slides over the editor on mobile; clicking it closes the sidebar */}
       {isMobile && sidebarOpen && isEditing && (
         <div
           ref={overlayRef}
@@ -133,6 +143,7 @@ export default function App() {
       )}
 
       {/* ── Sidebar ── */}
+      {/* On desktop the sidebar collapses in-place (width → 0); on mobile it slides in as a fixed overlay panel */}
       <div
         style={{
           borderColor: colors.bgBorder,
@@ -209,6 +220,7 @@ export default function App() {
                   onClick={() => selectNote(note)}
                   style={{
                     background: isActive ? colors.bgSurface : "transparent",
+                    // Accent left border highlights the currently selected note
                     borderLeftColor: isActive ? colors.accent : "transparent",
                   }}
                   className="w-full max-w-full text-left px-5 py-3 border-l-2 transition-colors overflow-hidden flex flex-col"
@@ -225,6 +237,7 @@ export default function App() {
                   >
                     {note.title || "Untitled"}
                   </p>
+                  {/* Content preview — truncated to a single line */}
                   <p style={{ color: colors.textMuted }} className="text-sm truncate w-full">
                     {note.content}
                   </p>
@@ -238,7 +251,7 @@ export default function App() {
       {/* ── Main Panel ── */}
       <div className="flex-1 flex flex-col min-w-0">
 
-        {/* Empty state */}
+        {/* Empty state — shown when no note is open */}
         {!isEditing && (
           <div className="flex-1 flex flex-col items-center justify-center gap-3">
             <div
@@ -269,6 +282,7 @@ export default function App() {
         {/* ── Edit / New mode ── */}
         {isEditing && (
           <>
+            {/* Toolbar: sidebar toggle on the left, save/delete actions on the right */}
             <div
               style={{ borderColor: colors.bgBorder }}
               className="h-16 flex items-center justify-between px-4 md:px-8 py-4 border-b flex-shrink-0 gap-2"
@@ -318,6 +332,7 @@ export default function App() {
               {/* Right: action buttons */}
               <div className="flex items-center gap-1.5 flex-shrink-0">
                 {mode === "edit" && (
+                  // First click shows the confirmation buttons; second click confirms deletion
                   !deleteConfirm ? (
                     <button
                       onClick={() => setDeleteConfirm(true)}
@@ -349,6 +364,7 @@ export default function App() {
                   )
                 )}
 
+                {/* Save is disabled until the title field has at least one non-whitespace character */}
                 <button
                   onClick={saveNote}
                   disabled={saving || !editTitle.trim()}
@@ -374,6 +390,7 @@ export default function App() {
                 }}
                 className="text-xl md:text-2xl font-semibold outline-none border-none w-full opacity-100 placeholder:opacity-25"
               />
+              {/* Divider between title and body */}
               <div style={{ background: colors.bgBorder }} className="h-px" />
               <textarea
                 placeholder="Start writing…"
