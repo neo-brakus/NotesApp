@@ -1,5 +1,9 @@
-import dotenv from "dotenv"
-dotenv.config()
+import dotenv from 'dotenv';
+
+// Load local .env file only if not running inside Docker
+if (process.env.DOCKER === undefined) {
+  dotenv.config();
+}
 
 import express from "express"
 import cors from "cors"

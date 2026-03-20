@@ -37,22 +37,74 @@ frontend/
     index.css
     main.tsx
     theme.ts
+
+db/
+  init.sql           # Database schema, auto-run by Docker on first startup
+
+docker-compose.yml
 ```
 
-## Getting Started
+---
+
+## Running with Docker (recommended)
+
+### Prerequisites
+
+- [Docker](https://www.docker.com/products/docker-desktop)
+
+### Steps
+
+1. Copy the example env file and fill in your values:
+   ```bash
+   cp .env.example .env
+   ```
+
+2. Build and start all services:
+   ```bash
+   docker compose up --build
+   ```
+
+The frontend is available at `http://localhost:5173` and the backend API at `http://localhost:3000`. The database is created and seeded automatically on first startup.
+
+On subsequent runs you can skip the `--build` flag:
+```bash
+docker compose up
+```
+
+To stop everything:
+```bash
+docker compose down
+```
+
+To stop everything and remove volumes (deletes DB data):
+```bash
+docker compose down -v
+```
+
+---
+
+## Running without Docker
 
 ### Prerequisites
 
 - Node.js
 - A running PostgreSQL instance
-- A `.env` file in `backend/` with your database connection details
+
+### Setup
+
+1. Copy the example env file for the backend and fill in your database connection details:
+   ```bash
+   cp backend/.env.example backend/.env
+   ```
+
+2. Create the database table by running `db/init.sql` against your PostgreSQL instance.
 
 ### Backend
 
 ```bash
 cd backend
 npm install
-npx ts-node src/server.ts
+npm run dev
 ```
 
 ### Frontend
@@ -63,4 +115,4 @@ npm install
 npm run dev
 ```
 
-The frontend runs on `http://localhost:5173` by default. The backend API is expected at `http://localhost:3000`.
+The frontend runs on `http://localhost:5173` and the backend API at `http://localhost:3000`.
