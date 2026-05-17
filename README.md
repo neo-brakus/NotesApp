@@ -2,6 +2,10 @@
 
 A lightweight full-stack note-taking application built for learning purposes.
 
+![Demo](./final_demo.gif)
+
+<img src="./final_demo.gif" width="800" alt="Demo" />
+
 ## Overview
 
 NotesApp is a simple CRUD application that allows users to create, read, update, and delete notes. All notes are global and visible to every user. The interface consists of a sidebar listing all existing notes and a main panel for viewing and editing note content.
